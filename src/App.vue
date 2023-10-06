@@ -25,9 +25,9 @@
       <span @click="shareOnTwitter"
         ><i class="fa fa-twitter" aria-hidden="true"></i> Twitter</span
       >
-      <span @click="shareViaSMS"
+      <!-- <span @click="shareViaSMS"
         ><i class="fa fa-sms" aria-hidden="true"></i> Send SMS</span
-      >
+      > -->
       <span @click="shareViaEmail"
         ><i class="fa fa-envelope" aria-hidden="true"></i> Email</span
       >
