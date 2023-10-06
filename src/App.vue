@@ -13,6 +13,7 @@
           >Your longitude: {{ longitude ? longitude : "searching..." }}</span
         >
         <span>Your latitude: {{ latitude ? latitude : "searching..." }}</span>
+        <span>Geocoded Address: {{ address ? address : "searching..." }}</span>
       </div>
     </div>
     <div @click="handleOpenShareModal" class="locate-me">
@@ -25,13 +26,14 @@
       <span @click="shareOnTwitter"
         ><i class="fa fa-twitter" aria-hidden="true"></i> Twitter</span
       >
-      <!-- <span @click="shareViaSMS"
-        ><i class="fa fa-sms" aria-hidden="true"></i> Send SMS</span
-      > -->
       <span @click="shareViaEmail"
         ><i class="fa fa-envelope" aria-hidden="true"></i> Email</span
       >
       <span @click="copyToClipboard"><i class="fas fa-copy"></i> Copy</span>
+    </div>
+
+    <div v-if="showsMap" class="showMap">
+      <MapView :apiKey="apiKey" :latitude="latitude" :longitude="longitude" />
     </div>
   </div>
 
@@ -42,19 +44,25 @@
 import Footer from "./components/Footer.vue";
 import Header from "./components/Header.vue";
 import Loader from "./components/Loader.vue";
+import MapView from "./components/Map.vue"; // Import the MapView component
 export default {
   name: "App",
   components: {
     Header,
     Footer,
     Loader,
+    MapView,
   },
   data() {
     return {
       isLoading: false,
       longitude: "",
       latitude: "",
+      address: "",
       openShareModal: false,
+      showsMap: false,
+      url: ``,
+      apiKey: "AIzaSyBuSBLKEZUsJz1x6rKHjyvs3oSQzhjs5n0",
     };
   },
   methods: {
@@ -65,7 +73,6 @@ export default {
         textToCopy
       )}`;
       this.openShareModal = false;
-
       window.open(twitterShareLink, "_blank");
     },
 
@@ -80,17 +87,6 @@ export default {
       this.openShareModal = false;
       window.location.href = mailtoLink;
     },
-
-    //Share via SMS
-    // shareViaSMS() {
-    //   const textToCopy = `Your Longitude: ${this.longitude}, Your Latitude: ${this.latitude}`;
-    //   const phoneNumber = "+1234567890";
-    //   const smsLink = `sms:${phoneNumber}?body=${encodeURIComponent(
-    //     textToCopy
-    //   )}`;
-    //   this.openShareModal = false;
-    //   window.location.href = smsLink;
-    // },
 
     //Share to whatsapp
     shareOnWhatsApp() {
@@ -109,6 +105,7 @@ export default {
       alert("Text copied to clipboard");
       this.openShareModal = false;
     },
+
     handleOpenShareModal() {
       if (this.longitude) {
         this.openShareModal = !this.openShareModal;
@@ -117,11 +114,36 @@ export default {
       }
     },
     showPosition(position) {
+      this.isLoading = true;
       this.longitude = position.coords.longitude;
       this.latitude = position.coords.latitude;
+      const params = "format=json&zoom=18";
+      const url = `https://nominatim.openstreetmap.org/reverse?lat=${this.latitude}&lon=${this.longitude}&${params}`;
+
+      // Perform the Fetch request
+      fetch(url)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          console.log(data);
+          this.address = data.display_name;
+        })
+        .catch((error) => {
+          console.error("Fetch error:", error);
+        });
+      if (this.longitude) {
+        // this.url = `https://www.google.com/maps/embed/v1/view?key=AIzaSyBuSBLKEZUsJz1x6rKHjyvs3oSQzhjs5n0&center=${
+        //   this.latitude ? this.latitude : 5.0
+        // },${this.longitude ? this.longitude : 8.0}&zoom=18`;
+        this.showsMap = true;
+      }
+      this.isLoading = false;
     },
     getGeolocation() {
-      this.isLoading = true;
       const options = {
         enableHighAccuracy: true,
         timeout: 10000,
@@ -135,7 +157,6 @@ export default {
         errorCallback,
         options
       );
-      this.isLoading = false;
     },
   },
 };
@@ -152,7 +173,7 @@ export default {
 div.main {
   margin-top: 60px;
   text-align: center;
-  height: 72vh;
+  height: 100vh;
 }
 
 .locate-me {
@@ -203,5 +224,9 @@ div.main {
 
 .heading-h3 {
   margin-bottom: 10px;
+}
+
+.showMap {
+  display: block;
 }
 </style>
