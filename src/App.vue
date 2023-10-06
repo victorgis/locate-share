@@ -82,15 +82,15 @@ export default {
     },
 
     //Share via SMS
-    shareViaSMS() {
-      const textToCopy = `Your Longitude: ${this.longitude}, Your Latitude: ${this.latitude}`;
-      const phoneNumber = "";
-      const smsLink = `sms:${textToCopy}?body=${encodeURIComponent(
-        phoneNumber
-      )}`;
-      this.openShareModal = false;
-      window.location.href = smsLink;
-    },
+    // shareViaSMS() {
+    //   const textToCopy = `Your Longitude: ${this.longitude}, Your Latitude: ${this.latitude}`;
+    //   const phoneNumber = "+1234567890";
+    //   const smsLink = `sms:${phoneNumber}?body=${encodeURIComponent(
+    //     textToCopy
+    //   )}`;
+    //   this.openShareModal = false;
+    //   window.location.href = smsLink;
+    // },
 
     //Share to whatsapp
     shareOnWhatsApp() {
