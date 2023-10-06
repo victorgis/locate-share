@@ -41,11 +41,13 @@
 <script>
 import Footer from "./components/Footer.vue";
 import Header from "./components/Header.vue";
+import Loader from "./components/Loader.vue";
 export default {
   name: "App",
   components: {
     Header,
     Footer,
+    Loader,
   },
   data() {
     return {
@@ -58,76 +60,61 @@ export default {
   methods: {
     //Share via Twitter
     shareOnTwitter() {
-      if (this.longitude) {
-        const textToCopy = `Your Longitude: ${this.longitude}, Your Latitude: ${this.latitude}`;
-        const twitterShareLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
-          textToCopy
-        )}`;
-        this.openShareModal = false;
+      const textToCopy = `Your Longitude: ${this.longitude}, Your Latitude: ${this.latitude}`;
+      const twitterShareLink = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+        textToCopy
+      )}`;
+      this.openShareModal = false;
 
-        window.open(twitterShareLink, "_blank");
-      } else {
-        alert('Click on "Locate Me", to find your location first');
-      }
+      window.open(twitterShareLink, "_blank");
     },
 
     //Share via Email
     shareViaEmail() {
-      if (this.longitude) {
-        const recipient = "";
-        const subject = "My current location";
-        const textToCopy = `Your Longitude: ${this.longitude}, Your Latitude: ${this.latitude}`;
-        const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(
-          subject
-        )}&body=${encodeURIComponent(textToCopy)}`;
-        this.openShareModal = false;
-        window.location.href = mailtoLink;
-      } else {
-        alert('Click on "Locate Me", to find your location first');
-      }
+      const recipient = "";
+      const subject = "My current location";
+      const textToCopy = `Your Longitude: ${this.longitude}, Your Latitude: ${this.latitude}`;
+      const mailtoLink = `mailto:${recipient}?subject=${encodeURIComponent(
+        subject
+      )}&body=${encodeURIComponent(textToCopy)}`;
+      this.openShareModal = false;
+      window.location.href = mailtoLink;
     },
 
     //Share via SMS
     shareViaSMS() {
       const textToCopy = `Your Longitude: ${this.longitude}, Your Latitude: ${this.latitude}`;
-      if (this.longitude) {
-        const phoneNumber = "";
-        const smsLink = `sms:${phoneNumber}?body=${encodeURIComponent(
-          textToCopy
-        )}`;
-        this.openShareModal = false;
-        window.location.href = smsLink;
-      }
-      alert('Click on "Locate Me", to find your location first');
+      const phoneNumber = "";
+      const smsLink = `sms:${textToCopy}?body=${encodeURIComponent(
+        phoneNumber
+      )}`;
+      this.openShareModal = false;
+      window.location.href = smsLink;
     },
 
     //Share to whatsapp
     shareOnWhatsApp() {
       const textToCopy = `Your Longitude: ${this.longitude}, Your Latitude: ${this.latitude}`;
-      if (this.longitude) {
-        const whatsappLink = `whatsapp://send?text=${encodeURIComponent(
-          textToCopy
-        )}`;
-        this.openShareModal = false;
-        window.open(whatsappLink, "_blank");
-      } else {
-        alert('Click on "Locate Me", to find your location first');
-      }
+      const whatsappLink = `whatsapp://send?text=${encodeURIComponent(
+        textToCopy
+      )}`;
+      this.openShareModal = false;
+      window.open(whatsappLink, "_blank");
     },
 
     //copy to clipboard
     async copyToClipboard() {
       const textToCopy = `Your Longitude: ${this.longitude}, Your Latitude: ${this.latitude}`;
+      await navigator.clipboard.writeText(textToCopy);
+      alert("Text copied to clipboard");
+      this.openShareModal = false;
+    },
+    handleOpenShareModal() {
       if (this.longitude) {
-        await navigator.clipboard.writeText(textToCopy);
-        alert("Text copied to clipboard");
-        this.openShareModal = false;
+        this.openShareModal = !this.openShareModal;
       } else {
         alert('Click on "Locate Me", to find your location first');
       }
-    },
-    handleOpenShareModal() {
-      this.openShareModal = !this.openShareModal;
     },
     showPosition(position) {
       this.longitude = position.coords.longitude;
@@ -149,8 +136,6 @@ export default {
         options
       );
       this.isLoading = false;
-
-      // navigator.geolocation.getCurrentPosition(this.showPosition);
     },
   },
 };
@@ -189,7 +174,6 @@ div.main {
 .results {
   width: 300px;
   margin: 20px auto;
-  /* height: 100px; */
   background: #f2f2f2;
   border-radius: 5px;
   padding: 15px;
