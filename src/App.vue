@@ -271,7 +271,6 @@ div.main {
 
 .showMap {
   display: block;
-  margin: 20px;
 }
 
 .btn-list {
