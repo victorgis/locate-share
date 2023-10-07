@@ -222,6 +222,14 @@ div.main {
   color: #227bc9;
 }
 
+/* Media query for mobile responsiveness */
+@media (max-width: 768px) {
+  .showMap {
+    text-align: center;
+    margin: 0 auto;
+  }
+}
+
 .heading-h3 {
   margin-bottom: 10px;
 }
