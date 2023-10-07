@@ -14,14 +14,20 @@ export default {
   
 <style scoped>
 .loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent black background */
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  z-index: 1000;
 }
 
 .spinner {
-  border: 4px solid rgba(0, 0, 0, 0.3);
+  border: 4px solid rgb(255, 255, 255);
   border-top: 4px solid #3498db;
   border-radius: 50%;
   width: 40px;

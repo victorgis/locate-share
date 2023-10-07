@@ -1,50 +1,66 @@
 <template>
-  <Header />
-  <div class="main">
-    <Loader v-if="isLoading" />
-    <p>Find my longitude & latitude</p>
-    <div @click="getGeolocation" class="locate-me">
-      locate me &nbsp;&nbsp;<i class="fa-solid fa-earth-africa"></i>
-    </div>
-    <div class="results">
-      <div class="result-values">
-        <h3 class="heading-h3">Results</h3>
-        <span
-          >Your longitude: {{ longitude ? longitude : "searching..." }}</span
-        >
-        <span>Your latitude: {{ latitude ? latitude : "searching..." }}</span>
-        <span>Geocoded Address: {{ address ? address : "searching..." }}</span>
+  <div class="full-app">
+    <Header />
+    <div class="main">
+      <Loader v-if="isLoading" />
+      <p>Find my longitude & latitude</p>
+      <div @click="getGeolocation" class="locate-me">
+        locate me &nbsp;&nbsp;<i class="fa-solid fa-earth-africa"></i>
+      </div>
+      <div class="results">
+        <div class="result-values">
+          <h3 class="heading-h3">Results</h3>
+          <span
+            >Your longitude: {{ longitude ? longitude : "searching..." }}</span
+          >
+          <span>Your latitude: {{ latitude ? latitude : "searching..." }}</span>
+          <span
+            >Geocoded Address: {{ address ? address : "searching..." }}</span
+          >
+        </div>
+      </div>
+      <div class="btn-list">
+        <div @click="handleOpenMap" class="locate-me">
+          {{ showsMap ? "Close Map" : "Show Map" }} &nbsp;&nbsp;<i
+            class="fa-solid fa-map"
+          ></i>
+        </div>
+        <div @click="handleOpenShareModal" class="locate-me">
+          share &nbsp;&nbsp;<i class="fa-solid fa-share-from-square"></i>
+        </div>
+      </div>
+
+      <div v-if="openShareModal" class="share-options">
+        <div class="div-span">
+          <span @click="closeModal" class="close">x</span>
+          <span @click="shareOnWhatsApp"
+            ><i class="fa fa-whatsapp" aria-hidden="true"></i> WhatsApp</span
+          >
+          <span @click="shareOnTwitter"
+            ><i class="fa fa-twitter" aria-hidden="true"></i> Twitter</span
+          >
+          <span @click="shareViaEmail"
+            ><i class="fa fa-envelope" aria-hidden="true"></i> Email</span
+          >
+          <span @click="copyToClipboard"><i class="fas fa-copy"></i> Copy</span>
+        </div>
+      </div>
+
+      <div v-if="showsMap" class="showMap">
+        <MapView :apiKey="apiKey" :latitude="latitude" :longitude="longitude" />
       </div>
     </div>
-    <div @click="handleOpenShareModal" class="locate-me">
-      share &nbsp;&nbsp;<i class="fa-solid fa-share-from-square"></i>
-    </div>
-    <div v-if="openShareModal" class="share-options">
-      <span @click="shareOnWhatsApp"
-        ><i class="fa fa-whatsapp" aria-hidden="true"></i> WhatsApp</span
-      >
-      <span @click="shareOnTwitter"
-        ><i class="fa fa-twitter" aria-hidden="true"></i> Twitter</span
-      >
-      <span @click="shareViaEmail"
-        ><i class="fa fa-envelope" aria-hidden="true"></i> Email</span
-      >
-      <span @click="copyToClipboard"><i class="fas fa-copy"></i> Copy</span>
-    </div>
 
-    <div v-if="showsMap" class="showMap">
-      <MapView :apiKey="apiKey" :latitude="latitude" :longitude="longitude" />
-    </div>
+    <Footer />
   </div>
-
-  <Footer />
 </template>
 
 <script>
 import Footer from "./components/Footer.vue";
 import Header from "./components/Header.vue";
 import Loader from "./components/Loader.vue";
-import MapView from "./components/Map.vue"; // Import the MapView component
+import MapView from "./components/Map.vue";
+import axios from "axios";
 export default {
   name: "App",
   components: {
@@ -61,11 +77,13 @@ export default {
       address: "",
       openShareModal: false,
       showsMap: false,
-      url: ``,
-      apiKey: "AIzaSyBuSBLKEZUsJz1x6rKHjyvs3oSQzhjs5n0",
+      apiKey: process.env.GOOGLEMAPS_API_KEY,
     };
   },
   methods: {
+    closeModal() {
+      this.openShareModal = false;
+    },
     //Share via Twitter
     shareOnTwitter() {
       const textToCopy = `Your Longitude: ${this.longitude}, Your Latitude: ${this.latitude}`;
@@ -113,7 +131,14 @@ export default {
         alert('Click on "Locate Me", to find your location first');
       }
     },
-    showPosition(position) {
+    handleOpenMap() {
+      if (this.longitude) {
+        this.showsMap = !this.showsMap;
+      } else {
+        alert('Click on "Locate Me", to find your location first');
+      }
+    },
+    async showPosition(position) {
       this.isLoading = true;
       this.longitude = position.coords.longitude;
       this.latitude = position.coords.latitude;
@@ -121,26 +146,9 @@ export default {
       const url = `https://nominatim.openstreetmap.org/reverse?lat=${this.latitude}&lon=${this.longitude}&${params}`;
 
       // Perform the Fetch request
-      fetch(url)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          return response.json();
-        })
-        .then((data) => {
-          console.log(data);
-          this.address = data.display_name;
-        })
-        .catch((error) => {
-          console.error("Fetch error:", error);
-        });
-      if (this.longitude) {
-        // this.url = `https://www.google.com/maps/embed/v1/view?key=AIzaSyBuSBLKEZUsJz1x6rKHjyvs3oSQzhjs5n0&center=${
-        //   this.latitude ? this.latitude : 5.0
-        // },${this.longitude ? this.longitude : 8.0}&zoom=18`;
-        this.showsMap = true;
-      }
+      const { data } = await axios.get(url);
+      this.address = data.display_name;
+
       this.isLoading = false;
     },
     getGeolocation() {
@@ -163,17 +171,19 @@ export default {
 </script>
 
 <style>
-#app {
+div.full-app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+  text-align: center;
+  display: grid;
+  grid-template-rows: auto 1fr auto; /* Header, content, footer */
+  min-height: 100vh;
 }
 
 div.main {
   margin-top: 60px;
-  text-align: center;
-  height: 100vh;
 }
 
 .locate-me {
@@ -204,22 +214,47 @@ div.main {
   display: block;
 }
 .share-options {
-  background: #f2f2f2;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* Semi-transparent black background */
+  z-index: 1000;
+}
+
+.div-span {
+  background: #2c3e50af;
+  text-align: left;
+  /* top: 80%; */
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #f2f2f2;
   width: 120px;
   margin: 0px auto;
 
-  padding: 5px 0;
   padding-left: 25px;
+  padding-bottom: 25px;
 }
-.share-options span {
-  display: block;
-  text-align: left;
+
+.div-span span {
   padding: 5px;
+  /* padding: 5px 0; */
   cursor: pointer;
+  display: block;
+}
+
+.div-span span.close {
+  text-align: right;
+  margin-right: 10px;
+  font-size: 20px;
 }
 
 .share-options span:hover {
-  color: #227bc9;
+  color: #5793c7;
 }
 
 /* Media query for mobile responsiveness */
@@ -236,5 +271,13 @@ div.main {
 
 .showMap {
   display: block;
+}
+
+.btn-list {
+  display: inline-flex;
+  margin-bottom: 20px;
+}
+.btn-list div {
+  margin: 0 10px;
 }
 </style>
