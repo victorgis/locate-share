@@ -1,5 +1,6 @@
 <template>
   <div>
+    <Loader v-if="isLoading" />
     <div ref="map" class="google-map"></div>
     <!-- <iframe
       height="450"
@@ -11,14 +12,24 @@
   </div>
 </template>
   
-  <script>
+<script>
+import Loader from "../components/Loader.vue";
 export default {
   name: "MapVue",
+  components: {
+    Loader,
+  },
+  data() {
+    return {
+      isLoading: false,
+    };
+  },
   mounted() {
     this.initMap();
   },
   methods: {
     async initMap() {
+      this.isLoading = true;
       let map;
       const myLatLng = { lat: this.latitude, lng: this.longitude };
       // eslint-disable-next-line no-undef
@@ -37,6 +48,7 @@ export default {
         map,
         title: "Center Place",
       });
+      this.isLoading = false;
     },
   },
   props: {
