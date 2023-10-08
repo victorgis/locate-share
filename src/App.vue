@@ -77,7 +77,7 @@ export default {
       address: "",
       openShareModal: false,
       showsMap: false,
-      apiKey: process.env.GOOGLEMAPS_API_KEY,
+      apiKey: process.env.VUE_APP_ARCGIS_API_KEY,
     };
   },
   methods: {
@@ -271,6 +271,7 @@ div.main {
 
 .showMap {
   display: block;
+  margin: 15px;
 }
 
 .btn-list {

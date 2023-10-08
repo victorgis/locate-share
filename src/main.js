@@ -11,5 +11,4 @@ app.component('LoaderVue', Loader); // Register the Loader component
 app.mount('#app');
 
 
-
 // createApp(App).mount('#app')
