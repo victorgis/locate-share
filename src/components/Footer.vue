@@ -11,6 +11,12 @@
         </ul>
       </div>
     </div>
+    <div>
+      <p>
+        <i class="fa fa-copyright" aria-hidden="true"></i> Copyright 2023 Victor
+        Essang. All Rights Reserved.
+      </p>
+    </div>
   </footer>
 </template>
   
@@ -35,7 +41,7 @@ footer {
 
 .footer-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   max-width: 1200px;
   margin: 0 auto;

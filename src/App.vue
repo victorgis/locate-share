@@ -5,18 +5,14 @@
       <Loader v-if="isLoading" />
       <p>Find my longitude & latitude</p>
       <div @click="getGeolocation" class="locate-me">
-        locate me &nbsp;&nbsp;<i class="fa-solid fa-earth-africa"></i>
+        Locate Me &nbsp;&nbsp;<i class="fa-solid fa-earth-africa"></i>
       </div>
       <div class="results">
         <div class="result-values">
           <h3 class="heading-h3">Results</h3>
-          <span
-            >Your longitude: {{ longitude ? longitude : "searching..." }}</span
-          >
-          <span>Your latitude: {{ latitude ? latitude : "searching..." }}</span>
-          <span
-            >Geocoded Address: {{ address ? address : "searching..." }}</span
-          >
+          <span>Your longitude: {{ longitude ? longitude : "..." }}</span>
+          <span>Your latitude: {{ latitude ? latitude : "..." }}</span>
+          <span>Display Address: {{ address ? address : "..." }}</span>
         </div>
       </div>
       <div class="btn-list">
@@ -26,13 +22,13 @@
           ></i>
         </div>
         <div @click="handleOpenShareModal" class="locate-me">
-          share &nbsp;&nbsp;<i class="fa-solid fa-share-from-square"></i>
+          Share &nbsp;&nbsp;<i class="fa-solid fa-share-from-square"></i>
         </div>
       </div>
 
       <div v-if="openShareModal" class="share-options">
         <div class="div-span">
-          <span @click="closeModal" class="close">x</span>
+          <span @click="closeModal" class="close"><b>x</b></span>
           <span @click="shareOnWhatsApp"
             ><i class="fa fa-whatsapp" aria-hidden="true"></i> WhatsApp</span
           >
@@ -224,7 +220,7 @@ div.main {
 }
 
 .div-span {
-  background: #2c3e50af;
+  background: #2c3e50c9;
   text-align: left;
   /* top: 80%; */
   position: absolute;
@@ -236,20 +232,22 @@ div.main {
   width: 120px;
   margin: 0px auto;
 
-  padding-left: 25px;
+  padding-left: 30px;
   padding-bottom: 25px;
 }
 
 .div-span span {
-  padding: 5px;
-  /* padding: 5px 0; */
+  /* padding: 5px; */
+  padding: 10px 0;
   cursor: pointer;
   display: block;
 }
 
 .div-span span.close {
+  padding-right: 20px;
+  padding-bottom: 0px;
   text-align: right;
-  margin-right: 10px;
+  margin: 0 10px;
   font-size: 20px;
 }
 

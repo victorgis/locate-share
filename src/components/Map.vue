@@ -98,7 +98,7 @@ export default {
         this.view = new MapView({
           map: map,
           center: [this.longitude, this.latitude], // Longitude, latitude
-          zoom: 13, // Zoom level
+          zoom: 16, // Zoom level
           container: this.$refs.map, // Div element
         });
       });
