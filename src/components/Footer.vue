@@ -11,6 +11,26 @@
         </ul>
       </div>
     </div>
+    <div class="social-media">
+      <a href="https://twitter.com/victor_gis"
+        ><i class="fa fa-twitter" aria-hidden="true"></i
+      ></a>
+      <a href="https://www.linkedin.com/in/victoressang/"
+        ><i class="fa fa-linkedin" aria-hidden="true"></i
+      ></a>
+      <a href="https://github.com/victorgis"
+        ><i class="fa fa-github" aria-hidden="true"></i
+      ></a>
+      <a href="https://medium.com/@victorgis"
+        ><i class="fa fa-medium" aria-hidden="true"></i
+      ></a>
+      <a href="https://www.youtube.com/@victoressang"
+        ><i class="fa fa-youtube" aria-hidden="true"></i
+      ></a>
+      <a href="https://splendorous-pavlova-b3dd13.netlify.app/"
+        ><i class="fas fa-globe-africa"></i
+      ></a>
+    </div>
     <div>
       <p>
         <i class="fa fa-copyright" aria-hidden="true"></i> Copyright 2023 Victor
@@ -65,6 +85,13 @@ footer {
 .footer-links a {
   text-decoration: none;
   color: #fff;
+}
+
+.social-media i {
+  padding: 0 10px;
+}
+.social-media i:hover {
+  color: rgba(187, 187, 187, 0.865);
 }
 
 /* Add additional styles as needed */

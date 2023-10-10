@@ -18,7 +18,7 @@ body {
   /* Apply global styles to anchor tags (links) */
   a {
     text-decoration: none;
-    color: #007BFF;
+    color: #fff;
   }
   
   a:hover {
